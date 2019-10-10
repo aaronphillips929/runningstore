@@ -1,0 +1,24 @@
+{
+  "name": "runningstore",
+  "version": "1.0.0",
+  "description": "This is an online store for running apparel and accessories.  You can buy items using the command line.  The store is managed by an MySQL database.",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaronphillips929/runningstore.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aaronphillips929/runningstore/issues"
+  },
+  "homepage": "https://github.com/aaronphillips929/runningstore#readme",
+  "dependencies": {
+    "inquirer": "^7.0.0",
+    "mysql": "^2.17.1"
+  }
+}
