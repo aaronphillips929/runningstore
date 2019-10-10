@@ -1,34 +1,81 @@
-var mysql = require('mysql');
-var inquirer = require('inquirer');
-var require = require('require');
+var mysql = require("mysql");
+var inquirer = require("inquirer");
+var Table = require("cli-table2");
+
+
 var connection = mysql.createConnection({
-    host: "localhost",
-    port: 3306,
-
-    user: "root",
-
-    password: "",
-    database: "bamazon"
+  host: "localhost",
+  port: 3306,
+  user: "root",
+  password: "Larkspur6021!",
+  database: "bamazon"
 });
 
-connection.connect(function (err) {
-    if (err) throw err;
-    console.log("connected as id " + connection.threadId);
-    readProducts();
-
-});
-
-function readProducts() {
-    console.log("Selecting all products...\n");
-    connection.query("SELECT * FROM products ", function(err, res) {
-      if (err) throw err;
-      console.log("FOR SALE:\n");
-      
-      for ( var i = 0; i < res.length; i++) {
-          
-          console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].price);
+connection.connect(function(error){
+    if(error) throw error;
+    console.log("connected as id" + connection.threadId);
+  });
+ 
+  var displayItems = function(){
+    var query = "Select * FROM products";
+    connection.query(query, function(err, res){
+      if(err) throw err;
+      var displayTable = new Table ({
+        head: ["Item ID", "Product", "Department", "Price", "Quantity"],
+        colWidths: [15,15,15,15,15]
+      });
+      for(var i = 0; i < res.length; i++){
+        displayTable.push(
+          [res[i].item_id,res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
+          );
       }
-      
-
+      console.log(displayTable.toString());
+      purchaseItems();
     });
   }
+  displayItems();
+
+  function purchaseItems(){
+    inquirer.prompt([
+    {
+      type: "input",
+      name: "item",
+      message:"Enter the ID of the item you want",
+    },
+    {
+      type:"input",
+      name:"quantity",
+      message:"Enter quantity you want to buy",
+    },
+  
+   ]).then(function(answers){
+    var itemRequested = answers.item;
+    var quantityNeeded = answers.quantity;
+    orderItems(itemRequested, quantityNeeded);
+   });
+  };
+
+  function orderItems(item, quantity){
+    connection.query('Select * FROM products WHERE ?', [{item_id: item}], function(err,res){
+      console.log(res);
+      var nowThis = res[0]
+      console.log(quantity);
+      console.log(nowThis.stock_quantity);
+      if(err){console.log(err)};
+      if(quantity <= nowThis.stock_quantity){
+        var totalValue = nowThis.price * quantity;
+        console.log("Items are in stock");
+        console.log("Total price of " + quantity + " " + nowThis.product_name + " is " + totalValue);
+        var newQuantity = nowThis.stock_quantity - quantity;
+  
+        connection.query("UPDATE products SET ? WHERE ?" , [{stock_quantity: newQuantity}, {item_id: item}], function(err){
+          if(err){console.log(err)};
+          console.log("Purchase Complete")
+          displayItems();
+        });
+      } else{
+        console.log("Out of stock");
+        displayItems();
+      };
+    });
+  };
