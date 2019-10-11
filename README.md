@@ -4,10 +4,6 @@ This is store for running apparel and accessories.  You can buy items using the 
 **Purpose:**
 Buy running gear from the command line.
 
-**GIF**
-
-![alt text](https://media.giphy.com/media/ZCkoJDOLrAcJZn2VPS/giphy.gif)
-
 **Screenshot**
 
 ![alt text](https://i.imgur.com/e36H2dZ.jpg)
