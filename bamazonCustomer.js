@@ -1,7 +1,6 @@
+var Table = require("cli-table2");
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-var Table = require("cli-table2");
-
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -13,7 +12,7 @@ var connection = mysql.createConnection({
 
 connection.connect(function(error){
     if(error) throw error;
-    console.log("connected as id" + connection.threadId);
+    console.log("connected as " + connection.threadId);
   });
  
   var displayItems = function(){
@@ -49,9 +48,9 @@ connection.connect(function(error){
     },
   
    ]).then(function(answers){
-    var itemRequested = answers.item;
-    var quantityNeeded = answers.quantity;
-    orderItems(itemRequested, quantityNeeded);
+    var itemWanted = answers.item;
+    var qtyWanted = answers.quantity;
+    orderItems(itemWanted, qtyWanted);
    });
   };
 
